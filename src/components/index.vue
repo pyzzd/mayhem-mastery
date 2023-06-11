@@ -7,7 +7,7 @@
     <div class="app-main-container">
       <div class="filter-box">
         <div class="component-select" style="margin-right: 20px">
-          <input type="text" placeholder="搜索">
+          <input type="text" placeholder="搜索" v-model="searchWord" @input="search">
         </div>
         <div class="component-switch-filter">
           <a href="" class="active"
@@ -57,7 +57,9 @@
             <th style="padding: 10px">
               <p style="margin-bottom: 5px" v-for=" item in data.properties">
                 {{ item.indexOf("：") > -1 ? (item.split('：')[0] + "：") : item }}<span
-                  :style="{ color: valueFontColor(item.split('：')[0],item.split('：')[1]) }">{{ item.split('：')[1] }}</span></p>
+                  :style="{ color: valueFontColor(item.split('：')[0],item.split('：')[1]) }">{{
+                  item.split('：')[1]
+                }}</span></p>
             </th>
             <th>
               <el-icon>
@@ -83,13 +85,16 @@ export default {
   name: "index",
   data() {
     return {
-      heroDataList: []
+      heroDataArray: [],
+      heroDataList: [],
+      searchWord: "",
     }
   },
   methods: {
     getHeroData() {
       heroData().then(r => {
         this.heroDataList = r.data;
+        this.heroDataArray = r.data;
         this.heroDataList.sort(function (a, b) {
           return a.hero.rank - b.hero.rank;
         });
@@ -118,13 +123,13 @@ export default {
     },
     valueFontColor(key, value) {
       if (value !== undefined) {
-        if (key === '承伤'){
+        if (key === '承伤') {
           if (parseInt(value.replace("%", "").replace("-", "").replace("+", "")) > 100) {
             return "red"
           } else {
             return "green"
           }
-        }else{
+        } else {
           if (value.indexOf("%") > -1 || value.indexOf("+") > -1 || value.indexOf("-") > -1) {
             if (value.indexOf("+") > -1) {
               return "green"
@@ -154,7 +159,26 @@ export default {
         return injure + "%"
       }
     },
-  },
+    search() {
+      if (this.searchWord.trim() === "") {
+        this.heroDataList = this.heroDataArray;
+      } else {
+        return this.heroDataList.filter(hero => {
+          const filteredHeroes = this.heroDataList.filter(hero => {
+            // 使用正则表达式进行模糊匹配
+            const regex = new RegExp(this.searchWord, "i");
+            // 判断英雄的 keywords 是否有匹配项
+            return hero.hero.keywords.some(keyword => regex.test(keyword));
+          });
+          // 将过滤后的数据列表赋值给 heroDataList
+          this.heroDataList = filteredHeroes;
+          return filteredHeroes;
+        });
+      }
+
+    }
+  }
+  ,
   mounted() {
     this.getHeroData()
   }
