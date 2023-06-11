@@ -10,14 +10,17 @@
           <input type="text" placeholder="搜索" v-model="searchWord" @input="search">
         </div>
         <div class="component-switch-filter">
-          <a href="" class="active"
-             style="width: 120px;border: 2px solid #b59758;color: #b59758;margin-right: -1px;">全部定位</a>
-          <a href="">战士</a>
-          <a href="">法师</a>
-          <a href="">刺客</a>
-          <a href="">坦克</a>
-          <a href="">射手</a>
-          <a href="">辅助</a>
+          <div ref="allMenu"
+               class="active"
+               style="width: 120px;border: 1px solid #b59758;color: #b59758;"
+               @click="menuChange('all',$event)">全部定位
+          </div>
+          <div ref="fighterMenu" @click="menuChange('fighter',$event)">战士</div>
+          <div ref="mageMenu" @click="menuChange('mage',$event)">法师</div>
+          <div ref="assassinMenu" @click="menuChange('assassin',$event)">刺客</div>
+          <div ref="tankrMenu" @click="menuChange('tank',$event)">坦克</div>
+          <div ref="marksmanMenu" @click="menuChange('marksman',$event)">射手</div>
+          <div ref="supportMenu" @click="menuChange('support',$event)">辅助</div>
         </div>
       </div>
       <div class="table-bar">
@@ -41,7 +44,8 @@
               <div class="icon-table-arrow">
                 胜率
                 <span @click="winSort">
-                              <el-icon :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+                              <el-icon
+                                  :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
               <el-icon :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? '' : 'wheat') }"><CaretBottom/></el-icon>
               </span>
               </div>
@@ -51,7 +55,8 @@
               <div class="icon-table-arrow">
                 登场率
                 <span @click="appearSort">
-                              <el-icon :style="{ color: (this.appearClick === 0) ? '' : (this.appearClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+                              <el-icon
+                                  :style="{ color: (this.appearClick === 0) ? '' : (this.appearClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
               <el-icon :style="{ color: (this.appearClick === 0) ? '' : (this.appearClick === 1 ? '' : 'wheat') }"><CaretBottom/></el-icon>
               </span>
               </div>
@@ -259,6 +264,45 @@ export default {
         });
       }
     },
+    menuChange(occupation, event) {
+      if (occupation === 'all') {
+        this.removeBorder();
+        event.target.style.border = '1px solid #b59758';
+        event.target.style.color = '#b59758';
+        this.heroDataList = this.heroDataArray;
+      } else {
+        this.removeBorder();
+        event.target.style.border = '1px solid #b59758';
+        event.target.style.color = '#b59758';
+        this.heroDataList = this.heroDataArray;
+        this.heroDataList = this.heroDataList.filter(item => item.hero.occupation.includes(occupation));
+      }
+
+    },
+    removeBorder() {
+      const allMenu = this.$refs.allMenu;
+      const fighterMenu = this.$refs.fighterMenu;
+      const mageMenu = this.$refs.mageMenu;
+      const assassinMenu = this.$refs.assassinMenu;
+      const tankrMenu = this.$refs.tankrMenu;
+      const marksmanMenu = this.$refs.marksmanMenu;
+      const supportMenu = this.$refs.supportMenu;
+      allMenu.style.border = 'none';
+      allMenu.style.color = '';
+      fighterMenu.style.border = 'none';
+      fighterMenu.style.color = '';
+      mageMenu.style.border = 'none';
+      mageMenu.style.color = '';
+      assassinMenu.style.border = 'none';
+      assassinMenu.style.color = '';
+      tankrMenu.style.border = 'none';
+      tankrMenu.style.color = '';
+      marksmanMenu.style.border = 'none';
+      marksmanMenu.style.color = '';
+      supportMenu.style.border = 'none';
+      supportMenu.style.color = '';
+
+    }
   }
   ,
   mounted() {
@@ -301,7 +345,7 @@ export default {
   flex-direction: row;
 }
 
-.component-switch-filter a {
+.component-switch-filter div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -317,11 +361,12 @@ export default {
   width: 82px;
 }
 
-.component-switch-filter a:hover {
+.component-switch-filter div:hover {
   color: #b59758;
+  cursor: pointer;
 }
 
-a {
+.component-switch-filter div {
   text-decoration: none;
 }
 
@@ -360,16 +405,7 @@ a {
   transform: translateY(-50%); /* 调整线段的垂直位置 */
 }
 
-.data-table tbody th:not(:last-child)::after {
-  content: ""; /* 添加伪元素内容 */
-  position: absolute; /* 设置绝对定位 */
-  top: 50%;
-  right: 0;
-  height: 50%;
-  width: .04rem;
-  background-color: #98958f;
-  transform: translateY(-50%); /* 调整线段的垂直位置 */
-}
+
 
 .table-body th {
   position: relative;
