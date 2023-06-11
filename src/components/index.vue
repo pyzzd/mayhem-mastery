@@ -21,14 +21,41 @@
         </div>
       </div>
       <div class="table-bar">
-        <div class="_update" style="color: #fff5e0;font-size: 13px;margin-bottom: 8px">数据更新时间：2023-06-09</div>
+        <div class="_update" style="color: #fff5e0;font-size: 14px;margin-bottom: 8px">数据更新时间：2023-06-09</div>
         <table class="data-table" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 10px;">
           <thead>
           <tr>
-            <th style="width: 100px">排名</th>
+            <th style="width: 100px">
+              <div class="icon-table-arrow">
+                排名
+                <span @click="rankSort">
+                              <el-icon
+                                  :style="{ color: (this.rankClick === 1) ? '' : (this.rankClick === 0 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+              <el-icon :style="{ color: (this.rankClick === 1) ? (this.rankClick === 0 ? '' : 'wheat') : '' }"><CaretBottom/></el-icon>
+              </span>
+              </div>
+
+            </th>
             <th style="width: 240px">英雄</th>
-            <th>胜率</th>
-            <th>登场率</th>
+            <th>
+              <div class="icon-table-arrow">
+                胜率
+                <span @click="winSort">
+                              <el-icon :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+              <el-icon :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? '' : 'wheat') }"><CaretBottom/></el-icon>
+              </span>
+              </div>
+
+            </th>
+            <th>
+              <div class="icon-table-arrow">
+                登场率
+                <span @click="appearSort">
+                              <el-icon :style="{ color: (this.appearClick === 0) ? '' : (this.appearClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+              <el-icon :style="{ color: (this.appearClick === 0) ? '' : (this.appearClick === 1 ? '' : 'wheat') }"><CaretBottom/></el-icon>
+              </span>
+              </div>
+            </th>
             <th>增强/削弱</th>
             <th>输出</th>
             <th>承伤</th>
@@ -88,6 +115,9 @@ export default {
       heroDataArray: [],
       heroDataList: [],
       searchWord: "",
+      rankClick: 0,
+      winClick: 0,
+      appearClick: 0,
     }
   },
   methods: {
@@ -176,7 +206,59 @@ export default {
         });
       }
 
-    }
+    },
+    rankSort() {
+      this.rankClick = this.rankClick ? 0 : 1;
+      if (this.rankClick === 1) {
+        this.heroDataList.sort(function (a, b) {
+          return b.hero.rank - a.hero.rank;
+        });
+      } else {
+        this.heroDataList.sort(function (a, b) {
+          return a.hero.rank - b.hero.rank;
+        });
+      }
+    },
+    winSort() {
+      this.rankClick = 3;
+      this.appearClick = 0;
+      this.winClick++;
+      if (this.winClick === 3) {
+        this.winClick = 0;
+        this.rankClick = 0;
+        this.heroDataList.sort(function (a, b) {
+          return a.hero.rank - b.hero.rank;
+        });
+      } else if (this.winClick === 2) {
+        this.heroDataList.sort(function (a, b) {
+          return b.hero.win - a.hero.win;
+        });
+      } else {
+        this.heroDataList.sort(function (a, b) {
+          return a.hero.win - b.hero.win;
+        });
+      }
+    },
+    appearSort() {
+      this.rankClick = 3;
+      this.winClick = 0;
+      this.appearClick++;
+      if (this.appearClick === 3) {
+        this.appearClick = 0;
+        this.rankClick = 0;
+        this.heroDataList.sort(function (a, b) {
+          return a.hero.rank - b.hero.rank;
+        });
+      } else if (this.appearClick === 2) {
+        this.heroDataList.sort(function (a, b) {
+          return b.hero.appear - a.hero.appear;
+        });
+      } else {
+        this.heroDataList.sort(function (a, b) {
+          return a.hero.appear - b.hero.appear;
+        });
+      }
+    },
   }
   ,
   mounted() {
@@ -339,6 +421,25 @@ a {
   display: inline-block;
   vertical-align: middle;
   margin-left: 20px;
+}
+
+.icon-table-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-table-arrow span {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+.icon-table-arrow span:hover {
+  color: rgba(245, 222, 179, 0.66);
+  transition: all 0.3s;
 }
 </style>
 
