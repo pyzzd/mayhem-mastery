@@ -14,7 +14,7 @@ export default {}
   margin: 0;
 }
 
-body{
+body {
   background-color: black;
 }
 </style>

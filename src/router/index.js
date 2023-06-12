@@ -3,12 +3,7 @@ import index from '@/components/index.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
-        {path: '/', name: "index", component: index},
-
-
-    ]
+    routes: [{path: '/', name: "index", component: index},]
 })
-
 
 export default router

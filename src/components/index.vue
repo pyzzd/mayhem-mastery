@@ -44,8 +44,8 @@
               <div class="icon-table-arrow">
                 胜率
                 <span @click="winSort">
-                              <el-icon
-                                  :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
+                  <el-icon
+                      :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? 'wheat' : ''),marginBottom: '-8px'}"><CaretTop/></el-icon>
               <el-icon :style="{ color: (this.winClick === 0) ? '' : (this.winClick === 1 ? '' : 'wheat') }"><CaretBottom/></el-icon>
               </span>
               </div>
@@ -69,14 +69,13 @@
           </tr>
           </thead>
           <tbody class="table-body">
-          <tr style="border-bottom: .01rem solid #98958f;" v-for=" data in heroDataList">
+          <tr style="border-bottom: .01rem solid #98958f;" v-for="data in heroDataList">
             <th>{{ data.hero.rank }}</th>
             <th style="text-align: left">
               <div class="hero-pic">
                 <img :src="data.hero.avatar"
                      :alt="data.hero.title" style="width: 55px;text-align: center; vertical-align: middle;"/>
               </div>
-
               <span style="margin-left: 15px;display: inline-block; vertical-align: middle;">{{
                   data.hero.title + " - " + data.hero.name
                 }}</span>
@@ -87,14 +86,14 @@
             <th>{{ damageVerify(data.damage) }}</th>
             <th>{{ injureVerify(data.injure) }}</th>
             <th style="padding: 10px">
-              <p style="margin-bottom: 5px" v-for=" item in data.properties">
+              <p style="margin-bottom: 5px" v-for="item in data.properties">
                 {{ item.indexOf("：") > -1 ? (item.split('：')[0] + "：") : item }}<span
                   :style="{ color: valueFontColor(item.split('：')[0],item.split('：')[1]) }">{{
                   item.split('：')[1]
                 }}</span></p>
             </th>
             <th>
-              <el-icon>
+              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)">
                 <CopyDocument/>
               </el-icon>
             </th>
@@ -109,9 +108,9 @@
 </template>
 
 <script>
-import {ref} from 'vue'
 import {heroData} from "@/http/api";
 import {ElMessage} from "element-plus";
+import useClipboard from 'vue-clipboard3'
 
 export default {
   name: "index",
@@ -133,7 +132,6 @@ export default {
         this.heroDataList.sort(function (a, b) {
           return a.hero.rank - b.hero.rank;
         });
-
       }).catch(e => {
         ElMessage({message: e.message, type: 'error'})
       })
@@ -185,7 +183,6 @@ export default {
       } else {
         return damage + "%"
       }
-
     },
     injureVerify(injure) {
       if (injure === 0) {
@@ -210,7 +207,6 @@ export default {
           return filteredHeroes;
         });
       }
-
     },
     rankSort() {
       this.rankClick = this.rankClick ? 0 : 1;
@@ -301,10 +297,18 @@ export default {
       marksmanMenu.style.color = '';
       supportMenu.style.border = 'none';
       supportMenu.style.color = '';
-
+    },
+    heroInfoCopy(name, attrs) {
+      const {toClipboard} = useClipboard()
+      let text = name += "，"
+      attrs.forEach(r => {
+        text += r += "，"
+      })
+      let copyText = text.substring(0, text.length - 1)
+      toClipboard(copyText)
+      ElMessage.success({message: copyText})
     }
-  }
-  ,
+  },
   mounted() {
     this.getHeroData()
   }
@@ -323,7 +327,6 @@ export default {
   left: 0;
   top: 0;
   z-index: -1;
-
 }
 
 .app-main-container {
@@ -404,7 +407,6 @@ export default {
   background-color: #98958f;
   transform: translateY(-50%); /* 调整线段的垂直位置 */
 }
-
 
 
 .table-body th {
