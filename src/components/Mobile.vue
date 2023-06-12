@@ -1,18 +1,18 @@
 <template>
   <div class="app-main">
-    <h1 style="font-weight: lighter;font-size: 50px;color:wheat; margin: 30px 0 0 60px">大乱斗</h1>
+    <h1 style="font-weight: lighter;font-size: 50px;color:wheat; margin: 30px 0 0 20px">大乱斗</h1>
     <div class="hero-cover" style="width: 100%;height: 500px">
       <img src="../assets/Leona.png" alt="common_pic" style="width: 100%; height: 100%;">
     </div>
     <div class="app-main-container">
       <div class="filter-box">
         <div class="component-select" style="margin-right: 20px">
-          <input type="text" placeholder="搜索" v-model="searchWord" @input="search">
+          <input type="text" placeholder="搜索" v-model="searchWord" @input="search" style="width: 130px">
         </div>
         <div class="component-switch-filter">
           <div ref="allMenu"
                class="active"
-               style="width: 120px;border: 1px solid #b59758;color: #b59758;"
+               style="width: 90px;border: 1px solid #b59758;color: #b59758;"
                @click="menuChange('all',$event)">全部定位
           </div>
           <div ref="fighterMenu" @click="menuChange('fighter',$event)">战士</div>
@@ -93,7 +93,7 @@
                 }}</span></p>
             </th>
             <th>
-              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)">
+              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)" style="cursor: pointer;">
                 <CopyDocument/>
               </el-icon>
             </th>
@@ -113,7 +113,7 @@ import {ElMessage} from "element-plus";
 import useClipboard from 'vue-clipboard3'
 
 export default {
-  name: "index",
+  name: "Mobile",
   data() {
     return {
       heroDataArray: [],
@@ -209,6 +209,8 @@ export default {
       }
     },
     rankSort() {
+      this.winClick = 0;
+      this.appearClick = 0;
       this.rankClick = this.rankClick ? 0 : 1;
       if (this.rankClick === 1) {
         this.heroDataList.sort(function (a, b) {
@@ -330,7 +332,7 @@ export default {
 }
 
 .app-main-container {
-  margin: 20px 0 0 60px;
+  margin: 20px 0 0 20px;
   z-index: 999;
 }
 
@@ -361,7 +363,7 @@ export default {
   border: 1px solid #313537;
   box-sizing: border-box;
   height: 100%;
-  width: 82px;
+  width: 58px;
 }
 
 .component-switch-filter div:hover {
