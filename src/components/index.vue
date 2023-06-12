@@ -1,6 +1,6 @@
 <template>
   <div class="app-main">
-    <h1 style="font-weight: lighter;font-size: 50px;color:wheat; margin: 30px 0 0 50px">大乱斗</h1>
+    <h1 style="font-weight: lighter;font-size: 50px;color:wheat; margin: 30px 0 0 60px">大乱斗</h1>
     <div class="hero-cover" style="width: 100%;height: 500px">
       <img src="../assets/Leona.png" alt="common_pic" style="width: 100%; height: 100%;">
     </div>
