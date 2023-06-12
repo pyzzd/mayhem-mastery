@@ -93,7 +93,8 @@
                 }}</span></p>
             </th>
             <th>
-              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)">
+              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties,data.hero.win)"
+                       style="cursor: pointer;">
                 <CopyDocument/>
               </el-icon>
             </th>
@@ -298,15 +299,27 @@ export default {
       supportMenu.style.border = 'none';
       supportMenu.style.color = '';
     },
-    heroInfoCopy(name, attrs) {
+    heroInfoCopy(name, attrs, win) {
+      let copyText;
       const {toClipboard} = useClipboard()
       let text = name += "，"
       attrs.forEach(r => {
         text += r += "，"
-      })
-      let copyText = text.substring(0, text.length - 1)
+      });
+      win = parseFloat(win);
+      if (win < 46) {
+        copyText = text.substring(0, text.length - 1) + "，胜率低成这比样也要玩？"
+      } else if (win < 48) {
+        copyText = text.substring(0, text.length - 1) + "，胜率较低，建议别玩"
+      } else if (win < 50) {
+        copyText = text.substring(0, text.length - 1)
+      } else if (win < 52) {
+        copyText = text.substring(0, text.length - 1) + "，高胜率英雄，这都不玩？"
+      } else {
+        copyText = text.substring(0, text.length - 1) + "，这英雄嘎嘎猛，拿到就是赢"
+      }
       toClipboard(copyText)
-      ElMessage.success({message: copyText})
+      ElMessage.success({message: "复制成功"})
     }
   },
   mounted() {
