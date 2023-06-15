@@ -1,10 +1,10 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import Index from '@/components/Index.vue'
 import Mobile from "@/components/Mobile.vue";
 
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {path: '/', name: "Index", component: Index},
         {path: '/mobile', name: "Mobile", component: Mobile}
