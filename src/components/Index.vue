@@ -27,9 +27,6 @@
         <div class="_update" style="color: #fff5e0;font-size: 14px;margin-bottom: 8px;">
           <span>数据更新时间：2023-06-09</span>
         </div>
-        <div class="author" style="color: #fff5e0;font-size: 14px;margin-bottom: 8px;">
-          <span>数据有问题？联系作者QQ： 484256249 </span>
-        </div>
         <table class="data-table" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 10px;">
           <thead>
           <tr>
