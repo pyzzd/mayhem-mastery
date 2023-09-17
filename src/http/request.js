@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const website = "https://apis.caikun.site"
+export const website = "https://apis.twinkles.cn"
 const service = axios.create({
     baseURL: website,
 })
