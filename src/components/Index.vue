@@ -25,7 +25,7 @@
       </div>
       <div class="table-bar">
         <div class="_update" style="color: #fff5e0;font-size: 14px;margin-bottom: 8px;">
-          <span>数据更新时间：2023-09-10</span>
+          <span>数据更新时间：{{this.dateTime}}</span>
         </div>
         <table class="data-table" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 10px;">
           <thead>
@@ -72,7 +72,7 @@
           </thead>
           <tbody class="table-body">
           <tr style="border-bottom: .01rem solid #98958f;" v-for="data in heroDataList">
-            <th>{{ data.hero.rank }}</th>
+            <th>{{ data.hero.top }}</th>
             <th style="text-align: left">
               <div class="hero-pic">
                 <img :src="data.hero.avatar"
@@ -95,7 +95,8 @@
                 }}</span></p>
             </th>
             <th>
-              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)" style="cursor: pointer;">
+              <el-icon @click="heroInfoCopy(data.hero.title + '-'+ data.hero.name,data.properties)"
+                       style="cursor: pointer;">
                 <CopyDocument/>
               </el-icon>
             </th>
@@ -110,7 +111,7 @@
 </template>
 
 <script>
-import {heroData} from "@/http/api";
+import {heroData, lastUpdateTime} from "@/http/api";
 import {ElMessage} from "element-plus";
 import useClipboard from 'vue-clipboard3'
 
@@ -120,6 +121,7 @@ export default {
     return {
       heroDataArray: [],
       heroDataList: [],
+      dateTime: "",
       searchWord: "",
       rankClick: 0,
       winClick: 0,
@@ -132,8 +134,22 @@ export default {
         this.heroDataList = r.data;
         this.heroDataArray = r.data;
         this.heroDataList.sort(function (a, b) {
-          return a.hero.rank - b.hero.rank;
+          return a.hero.top - b.hero.top;
         });
+      }).catch(e => {
+        ElMessage({message: e.message, type: 'error'})
+      })
+    },
+    getLastUpdateTime() {
+      lastUpdateTime().then(r => {
+        let date = new Date(parseInt(r.data));
+        let year = date.getFullYear();
+        let month = ("0" + (date.getMonth() + 1)).slice(-2); // 月份从0开始，需要加1
+        let day = ("0" + date.getDate()).slice(-2);
+        let hours = ("0" + date.getHours()).slice(-2);
+        let minutes = ("0" + date.getMinutes()).slice(-2);
+        let seconds = ("0" + date.getSeconds()).slice(-2);
+        this.dateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       }).catch(e => {
         ElMessage({message: e.message, type: 'error'})
       })
@@ -216,11 +232,11 @@ export default {
       this.rankClick = this.rankClick ? 0 : 1;
       if (this.rankClick === 1) {
         this.heroDataList.sort(function (a, b) {
-          return b.hero.rank - a.hero.rank;
+          return b.hero.top - a.hero.top;
         });
       } else {
         this.heroDataList.sort(function (a, b) {
-          return a.hero.rank - b.hero.rank;
+          return a.hero.top - b.hero.top;
         });
       }
     },
@@ -232,7 +248,7 @@ export default {
         this.winClick = 0;
         this.rankClick = 0;
         this.heroDataList.sort(function (a, b) {
-          return a.hero.rank - b.hero.rank;
+          return a.hero.top - b.hero.top;
         });
       } else if (this.winClick === 2) {
         this.heroDataList.sort(function (a, b) {
@@ -252,7 +268,7 @@ export default {
         this.appearClick = 0;
         this.rankClick = 0;
         this.heroDataList.sort(function (a, b) {
-          return a.hero.rank - b.hero.rank;
+          return a.hero.top - b.hero.top;
         });
       } else if (this.appearClick === 2) {
         this.heroDataList.sort(function (a, b) {
@@ -313,8 +329,10 @@ export default {
       ElMessage.success({message: copyText})
     }
   },
+
   mounted() {
     this.getHeroData()
+    this.getLastUpdateTime()
   }
 }
 </script>
